@@ -5,7 +5,7 @@
 
 namespace SprykerFeature\Zed\ProductCategory\Persistence\Propel;
 
-use SprykerFeature\Zed\ProductCategory\Persistence\Propel\Base\SpyProductCategory as BaseSpyProductCategory;
+use Orm\Zed\ProductCategory\Persistence\Base\SpyProductCategory as BaseSpyProductCategory;
 
 /**
  * Skeleton subclass for representing a row from the 'spy_product_category' table.
@@ -16,7 +16,7 @@ use SprykerFeature\Zed\ProductCategory\Persistence\Propel\Base\SpyProductCategor
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class SpyProductCategory extends BaseSpyProductCategory
+abstract class AbstractSpyProductCategory extends BaseSpyProductCategory
 {
 
 }
