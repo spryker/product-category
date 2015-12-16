@@ -27,7 +27,7 @@ use Spryker\Zed\ProductCategory\Persistence\ProductCategoryQueryContainerInterfa
 /**
  * @method ProductCategoryQueryContainer getQueryContainer()
  */
-class ProductCategoryDependencyContainer extends AbstractCommunicationFactory
+class ProductCategoryCommunicationFactory extends AbstractCommunicationFactory
 {
 
     /**
