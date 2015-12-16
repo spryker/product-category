@@ -12,7 +12,7 @@ use Spryker\Zed\Category\Persistence\CategoryQueryContainer;
 use Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery;
 use Spryker\Zed\ProductCategory\Persistence\QueryExpander\ProductCategoryPathQueryExpander;
 
-class ProductCategoryDependencyContainer extends AbstractPersistenceFactory
+class ProductCategoryPersistenceFactory extends AbstractPersistenceFactory
 {
 
     /**
