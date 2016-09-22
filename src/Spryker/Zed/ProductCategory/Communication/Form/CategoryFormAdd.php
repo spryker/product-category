@@ -105,9 +105,7 @@ class CategoryFormAdd extends AbstractType
             ->add(self::FIELD_FK_PARENT_CATEGORY_NODE, new Select2ComboBoxType(), [
                 'label' => 'Parent',
                 'choices' => $choices,
-                'constraints' => [
-                    new NotBlank(),
-                ]
+                'required' => false,
             ]);
 
         return $this;
