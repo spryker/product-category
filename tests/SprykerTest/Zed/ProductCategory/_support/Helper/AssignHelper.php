@@ -28,9 +28,6 @@ class AssignHelper extends Module
         $this->removeRelations();
     }
 
-    /**
-     * @return void
-     */
     protected function removeRelations(): void
     {
         $idCategory = ProductCategoryAssignPage::CATEGORY[ProductCategoryAssignPage::CATEGORY_ID];
@@ -40,12 +37,6 @@ class AssignHelper extends Module
             ->delete();
     }
 
-    /**
-     * @param int $idCategory
-     * @param int $idProductAbstract
-     *
-     * @return void
-     */
     public function assignProductToCategory(int $idCategory, int $idProductAbstract): void
     {
         $spyProductCategory = new SpyProductCategory();

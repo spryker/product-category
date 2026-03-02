@@ -21,12 +21,6 @@ class ProductCategoryDataHelper extends Module
     use DataCleanupHelperTrait;
     use LocatorHelperTrait;
 
-    /**
-     * @param int $idCategory
-     * @param array $seedData
-     *
-     * @return \Generated\Shared\Transfer\ProductCategoryTransfer
-     */
     public function haveProductCategoryForCategory(int $idCategory, array $seedData): ProductCategoryTransfer
     {
         $productCategoryTransfer = $this->generateProductCategoryTransfer($seedData);
@@ -47,21 +41,11 @@ class ProductCategoryDataHelper extends Module
         );
     }
 
-    /**
-     * @param array $seedData
-     *
-     * @return \Generated\Shared\Transfer\ProductCategoryTransfer
-     */
     protected function generateProductCategoryTransfer(array $seedData = []): ProductCategoryTransfer
     {
         return (new ProductCategoryBuilder($seedData))->build();
     }
 
-    /**
-     * @param \Orm\Zed\ProductCategory\Persistence\SpyProductCategory $productCategoryEntity
-     *
-     * @return void
-     */
     protected function cleanupProductCategory(SpyProductCategory $productCategoryEntity): void
     {
         SpyProductCategoryQuery::create()

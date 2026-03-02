@@ -29,9 +29,6 @@ class ProductCategoryBusinessTester extends Actor
 {
     use _generated\ProductCategoryBusinessTesterActions;
 
-    /**
-     * @return \Generated\Shared\Transfer\LocaleTransfer
-     */
     public function getCurrentLocale(): LocaleTransfer
     {
         return $this->getLocator()

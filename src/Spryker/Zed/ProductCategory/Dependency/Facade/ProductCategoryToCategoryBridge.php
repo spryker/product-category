@@ -26,40 +26,21 @@ class ProductCategoryToCategoryBridge implements ProductCategoryToCategoryInterf
         $this->categoryFacade = $categoryFacade;
     }
 
-    /**
-     * @param int $idCategory
-     *
-     * @return void
-     */
     public function touchCategoryActive(int $idCategory): void
     {
         $this->categoryFacade->touchCategoryActive($idCategory);
     }
 
-    /**
-     * @param int $idNode
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return string
-     */
     public function getNodePath(int $idNode, LocaleTransfer $localeTransfer): string
     {
         return $this->categoryFacade->getNodePath($idNode, $localeTransfer);
     }
 
-    /**
-     * @return string
-     */
     public function getCategoryListUrl(): string
     {
         return $this->categoryFacade->getCategoryListUrl();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CategoryCriteriaTransfer $categoryCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\CategoryTransfer|null
-     */
     public function findCategory(CategoryCriteriaTransfer $categoryCriteriaTransfer): ?CategoryTransfer
     {
         return $this->categoryFacade->findCategory($categoryCriteriaTransfer);

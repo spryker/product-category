@@ -19,9 +19,6 @@ class ProductCategoryReader implements ProductCategoryReaderInterface
      */
     protected $productCategoryManager;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Business\Manager\ProductCategoryManagerInterface $productCategoryManager
-     */
     public function __construct(ProductCategoryManagerInterface $productCategoryManager)
     {
         $this->productCategoryManager = $productCategoryManager;
@@ -46,11 +43,6 @@ class ProductCategoryReader implements ProductCategoryReaderInterface
         return $productNames;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
-     *
-     * @return string
-     */
     protected function buildProductName(ProductAbstractTransfer $productAbstractTransfer): string
     {
         return sprintf(

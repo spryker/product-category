@@ -63,9 +63,6 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_CATEGORY);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Business\Model\CategoryReaderInterface
-     */
     public function createCategoryReader(): CategoryReaderInterface
     {
         return new CategoryReader(
@@ -74,9 +71,6 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Business\Reader\ProductCategoryReaderInterface
-     */
     public function createProductCategoryReader(): ProductCategoryReaderInterface
     {
         return new ProductCategoryReader(
@@ -84,9 +78,6 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpanderInterface
-     */
     public function createProductConcreteExpander(): ProductConcreteExpanderInterface
     {
         return new ProductConcreteExpander(
@@ -95,9 +86,6 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTriggerInterface
-     */
     public function createProductCategoryEventTrigger(): ProductCategoryEventTriggerInterface
     {
         return new ProductCategoryEventTrigger(

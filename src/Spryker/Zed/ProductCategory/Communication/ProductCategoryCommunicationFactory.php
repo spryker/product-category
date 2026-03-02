@@ -88,9 +88,6 @@ class ProductCategoryCommunicationFactory extends AbstractCommunicationFactory
         return $this->getFormFactory()->create(AssignForm::class, $data, []);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryBridge
-     */
     public function getCategoryFacade(): ProductCategoryToCategoryBridge
     {
         return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_CATEGORY);

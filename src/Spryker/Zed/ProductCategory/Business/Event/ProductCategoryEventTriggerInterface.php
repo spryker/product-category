@@ -11,11 +11,6 @@ use Generated\Shared\Transfer\CategoryTransfer;
 
 interface ProductCategoryEventTriggerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\CategoryTransfer $categoryTransfer
-     *
-     * @return void
-     */
     public function triggerProductUpdateEventsForCategory(CategoryTransfer $categoryTransfer): void;
 
     /**

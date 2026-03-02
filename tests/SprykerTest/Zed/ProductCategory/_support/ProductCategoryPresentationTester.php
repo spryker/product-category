@@ -35,11 +35,6 @@ class ProductCategoryPresentationTester extends Actor
 {
     use _generated\ProductCategoryPresentationTesterActions;
 
-    /**
-     * @param string $name
-     *
-     * @return \Orm\Zed\Product\Persistence\SpyProductAbstract
-     */
     public function createProductEntity(string $name): SpyProductAbstract
     {
         $localeEntity = $this->createLocaleEntity('en_US');
@@ -73,12 +68,6 @@ class ProductCategoryPresentationTester extends Actor
         return $productAbstractEntity;
     }
 
-    /**
-     * @param int $idCategory
-     * @param int $idProductAbstract
-     *
-     * @return void
-     */
     public function assignProductToCategory(int $idCategory, int $idProductAbstract): void
     {
         $spyProductCategory = new SpyProductCategory();
@@ -88,11 +77,6 @@ class ProductCategoryPresentationTester extends Actor
             ->save();
     }
 
-    /**
-     * @param string $localeName
-     *
-     * @return \Orm\Zed\Locale\Persistence\SpyLocale
-     */
     public function createLocaleEntity(string $localeName): SpyLocale
     {
         $localeEntity = SpyLocaleQuery::create()
@@ -104,11 +88,6 @@ class ProductCategoryPresentationTester extends Actor
         return $localeEntity;
     }
 
-    /**
-     * @param string $productName
-     *
-     * @return void
-     */
     public function searchTableByProductName(string $productName): void
     {
         $this->fillField(ProductCategoryAssignPage::SELECTOR_TABLE_SEARCH, $productName);

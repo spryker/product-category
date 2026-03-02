@@ -44,9 +44,6 @@ class GetProductCategoryCollectionTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionByProductAbstractId(): void
     {
         // Arrange
@@ -74,9 +71,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->assertSame($categoryTransfer->getIdCategory(), $productCategoryTransfers->offsetGet(0)->getFkCategory());
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionByProductAbstractIds(): void
     {
         // Arrange
@@ -133,9 +127,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->fail('Unable to find linked product to product category');
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionByLocale(): void
     {
         // Arrange
@@ -169,9 +160,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->assertCount(2, $productCategoryTransfers);
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionByFakeLocale(): void
     {
         // Arrange
@@ -197,9 +185,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->assertEmpty($productCategoryTransfers);
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionByFakeProductAbstract(): void
     {
         // Arrange
@@ -224,9 +209,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->assertEmpty($productCategoryTransfers);
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionEnsureCategoryExpansion(): void
     {
         // Arrange
@@ -255,9 +237,6 @@ class GetProductCategoryCollectionTest extends Unit
         $this->assertSame($categoryTransfer->getCategoryKey(), $expandedCategory->getCategoryKey());
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionEnsureLocalizedAttributeExpansion(): void
     {
         // Arrange
@@ -294,9 +273,6 @@ class GetProductCategoryCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionEnsureLocaleExpansion(): void
     {
         // Arrange

@@ -93,9 +93,6 @@ class ProductCategoryRepositoryTest extends Unit
         $this->assertSame($expectedCount, count($productCategoryTransferCollection->getCategories()));
     }
 
-    /**
-     * @return array
-     */
     public function getCategoryTransferCollectionByIdProductAbstractData(): array
     {
         return [
@@ -135,9 +132,6 @@ class ProductCategoryRepositoryTest extends Unit
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductCategoryCollectionContainsNecessaryLocales(): void
     {
         // Arrange
@@ -167,9 +161,6 @@ class ProductCategoryRepositoryTest extends Unit
         $this->tester->assertCategoryContainsNecessaryLocales($categoryTransfer, static::LOCALE_NAMES);
     }
 
-    /**
-     * @return void
-     */
     public function testUseSeveralRepositoryMethodsInOneRequestReturnDifferentResults(): void
     {
         // Arrange

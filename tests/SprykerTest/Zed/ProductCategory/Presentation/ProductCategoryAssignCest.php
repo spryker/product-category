@@ -22,22 +22,12 @@ use SprykerTest\Zed\ProductCategory\ProductCategoryPresentationTester;
  */
 class ProductCategoryAssignCest
 {
-    /**
-     * @param \SprykerTest\Zed\ProductCategory\ProductCategoryPresentationTester $i
-     *
-     * @return void
-     */
     public function _before(ProductCategoryPresentationTester $i): void
     {
         $i->amZed();
         $i->amLoggedInUser();
     }
 
-    /**
-     * @param \SprykerTest\Zed\ProductCategory\ProductCategoryPresentationTester $i
-     *
-     * @return void
-     */
     public function testThatICanAssignProducts(ProductCategoryPresentationTester $i): void
     {
         $name = 'my_unique_product_name_' . sha1(random_bytes(50));
@@ -68,11 +58,6 @@ class ProductCategoryAssignCest
         $i->waitForElement($assignedProductCheckboxSelector);
     }
 
-    /**
-     * @param \SprykerTest\Zed\ProductCategory\ProductCategoryPresentationTester $i
-     *
-     * @return void
-     */
     public function testThatICanDeassignProducts(ProductCategoryPresentationTester $i): void
     {
         $name = 'my_unique_product_name_' . sha1(random_bytes(50));
@@ -97,12 +82,6 @@ class ProductCategoryAssignCest
         $i->waitForElement(ProductCategoryAssignPage::SUCCESS_MESSAGE_SELECTOR);
     }
 
-    /**
-     * @param int $idAbstractProduct
-     * @param string $selectorPrefix
-     *
-     * @return string
-     */
     private function buildProductSelector(int $idAbstractProduct, string $selectorPrefix): string
     {
         return sprintf(

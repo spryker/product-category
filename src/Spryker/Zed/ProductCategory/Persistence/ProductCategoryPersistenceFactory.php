@@ -38,17 +38,11 @@ class ProductCategoryPersistenceFactory extends AbstractPersistenceFactory
         return SpyProductAbstractQuery::create();
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Persistence\Propel\Mapper\CategoryMapper
-     */
     public function createCategoryMapper(): CategoryMapper
     {
         return new CategoryMapper();
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Persistence\Propel\Mapper\ProductCategoryMapper
-     */
     public function createProductCategoryMapper(): ProductCategoryMapper
     {
         return new ProductCategoryMapper(
@@ -56,17 +50,11 @@ class ProductCategoryPersistenceFactory extends AbstractPersistenceFactory
         );
     }
 
-    /**
-     * @return \Orm\Zed\Category\Persistence\SpyCategoryNodeQuery
-     */
     public function createCategoryNodeQuery(): SpyCategoryNodeQuery
     {
         return SpyCategoryNodeQuery::create();
     }
 
-    /**
-     * @return \Orm\Zed\Category\Persistence\SpyCategoryClosureTableQuery
-     */
     public function createCategoryClosureTableQuery(): SpyCategoryClosureTableQuery
     {
         return SpyCategoryClosureTableQuery::create();

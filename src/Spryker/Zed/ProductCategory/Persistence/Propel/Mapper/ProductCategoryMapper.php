@@ -20,9 +20,6 @@ class ProductCategoryMapper
      */
     protected $categoryMapper;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Persistence\Propel\Mapper\CategoryMapper $categoryMapper
-     */
     public function __construct(CategoryMapper $categoryMapper)
     {
         $this->categoryMapper = $categoryMapper;

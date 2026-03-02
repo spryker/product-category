@@ -41,12 +41,6 @@ class ProductCategoryManager implements ProductCategoryManagerInterface
      */
     protected $eventFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Persistence\ProductCategoryQueryContainerInterface $productCategoryQueryContainer
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryInterface $categoryFacade
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToProductInterface $productFacade
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToEventInterface|null $eventFacade
-     */
     public function __construct(
         ProductCategoryQueryContainerInterface $productCategoryQueryContainer,
         ProductCategoryToCategoryInterface $categoryFacade,

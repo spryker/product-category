@@ -54,9 +54,6 @@ class ProductCategoryFacadeTest extends Unit
      */
     protected ProductCategoryBusinessTester $tester;
 
-    /**
-     * @return void
-     */
     public function testGetProductConcreteIdsByCategoryIdsReturnArrayOfIdsOfAssignedConcretes(): void
     {
         // Arrange
@@ -74,9 +71,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->assertEquals([$productTransfer->getIdProductConcrete()], $productConcreteIds);
     }
 
-    /**
-     * @return void
-     */
     public function testGetProductConcreteIdsByCategoryIdsReturnsEmptyArrayWhenNoProductsAssignedToCategory(): void
     {
         // Arrange
@@ -91,9 +85,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->assertEmpty($productConcreteIds);
     }
 
-    /**
-     * @return void
-     */
     public function testGetLocalizedProductAbstractNamesByCategoryWillReturnLocalizedProductsNamesByCategory(): void
     {
         // Arrange
@@ -117,9 +108,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->assertTrue(in_array($expectedProductName, $productNames), 'Localized product name should be found.');
     }
 
-    /**
-     * @return void
-     */
     public function testGetCategoryTransferCollectionByIdProductAbstractWillReturnCategoriesWithLocalizedAttributesForProvidedLocaleOnly(): void
     {
         // Arrange
@@ -164,9 +152,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->assertSame($categoryLocalizedAttributesTransferEn->getName(), $categoryLocalizedAttributesTransfer->getName());
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCategory\Business\ProductCategoryFacadeInterface
-     */
     public function getProductCategoryFacade(): ProductCategoryFacadeInterface
     {
         return $this->tester->getLocator()->productCategory()->facade();
@@ -241,9 +226,6 @@ class ProductCategoryFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testTriggerProductUpdateEventsForCategoryShouldThrowAnExceptionWhenCategoryNodeIsNotProvided(): void
     {
         // Assert
@@ -253,9 +235,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->getProductCategoryFacade()->triggerProductUpdateEventsForCategory(new CategoryTransfer());
     }
 
-    /**
-     * @return void
-     */
     public function testTriggerProductUpdateEventsForCategoryShouldThrowAnExceptionWhenCategoryNodeIdIsNotProvided(): void
     {
         // Assert
@@ -267,9 +246,6 @@ class ProductCategoryFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testTriggerProductUpdateEventsForCategoryShouldNotTriggerProductUpdateEventsForNonExistingCategoryNode(): void
     {
         // Arrange
@@ -288,9 +264,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->getProductCategoryFacade()->triggerProductUpdateEventsForCategory($categoryTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testTriggerProductUpdateEventsForCategoryShouldTriggerProductUpdateEventsForCategoryAndChildCategories(): void
     {
         // Arrange
@@ -321,9 +294,6 @@ class ProductCategoryFacadeTest extends Unit
         $this->getProductCategoryFacade()->triggerProductUpdateEventsForCategory($parentCategoryTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testTriggerProductUpdateEventsForCategoryShouldFilterOutDuplicateProductAbstractIds(): void
     {
         // Arrange

@@ -28,12 +28,6 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
      */
     protected const TABLE_JOIN_CATEGORY = 'Category';
 
-    /**
-     * @param int $idProductAbstract
-     * @param int $idLocale
-     *
-     * @return \Generated\Shared\Transfer\CategoryCollectionTransfer
-     */
     public function getCategoryTransferCollectionByIdProductAbstract(int $idProductAbstract, int $idLocale): CategoryCollectionTransfer
     {
         $spyCategoryCollection = $this->queryCategoriesByIdProductAbstract($idProductAbstract, $idLocale)->find();
@@ -43,12 +37,6 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
             ->mapCategoryCollection($spyCategoryCollection, new CategoryCollectionTransfer());
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param int $idLocale
-     *
-     * @return \Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery
-     */
     protected function queryCategoriesByIdProductAbstract(int $idProductAbstract, int $idLocale): SpyProductCategoryQuery
     {
         /** @var \Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery $productCategoryQuery */
@@ -160,12 +148,6 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
             );
     }
 
-    /**
-     * @param \Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery $productCategoryQuery
-     * @param \Generated\Shared\Transfer\ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer
-     *
-     * @return \Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery
-     */
     protected function applyProductCategoryFilters(
         SpyProductCategoryQuery $productCategoryQuery,
         ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer

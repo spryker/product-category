@@ -48,12 +48,6 @@ class CategoryMapper
         return $categoryCollectionTransfer;
     }
 
-    /**
-     * @param \Orm\Zed\Category\Persistence\SpyCategory $categoryEntity
-     * @param \Generated\Shared\Transfer\CategoryTransfer $categoryTransfer
-     *
-     * @return \Generated\Shared\Transfer\CategoryTransfer
-     */
     public function mapCategoryEntityToCategoryTransfer(
         SpyCategory $categoryEntity,
         CategoryTransfer $categoryTransfer
@@ -113,12 +107,6 @@ class CategoryMapper
         return $categoryTransfer;
     }
 
-    /**
-     * @param \Orm\Zed\Category\Persistence\SpyCategory $categoryEntity
-     * @param \Generated\Shared\Transfer\CategoryTransfer $categoryTransfer
-     *
-     * @return \Generated\Shared\Transfer\CategoryTransfer
-     */
     protected function addLocalizedAttributesToCategory(SpyCategory $categoryEntity, CategoryTransfer $categoryTransfer): CategoryTransfer
     {
         foreach ($categoryEntity->getAttributes() as $attribute) {

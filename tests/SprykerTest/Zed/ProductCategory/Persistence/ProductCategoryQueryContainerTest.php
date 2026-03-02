@@ -94,9 +94,6 @@ class ProductCategoryQueryContainerTest extends Unit
         $this->assertSame($expectedCount, $productCategoryQuery->count());
     }
 
-    /**
-     * @return array
-     */
     public function getQueryProductsAbstractBySearchTermData(): array
     {
         return [

@@ -13,30 +13,11 @@ use Generated\Shared\Transfer\LocaleTransfer;
 
 interface ProductCategoryToCategoryInterface
 {
-    /**
-     * @param int $idCategory
-     *
-     * @return void
-     */
     public function touchCategoryActive(int $idCategory): void;
 
-    /**
-     * @param int $idNode
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return string
-     */
     public function getNodePath(int $idNode, LocaleTransfer $localeTransfer): string;
 
-    /**
-     * @return string
-     */
     public function getCategoryListUrl(): string;
 
-    /**
-     * @param \Generated\Shared\Transfer\CategoryCriteriaTransfer $categoryCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\CategoryTransfer|null
-     */
     public function findCategory(CategoryCriteriaTransfer $categoryCriteriaTransfer): ?CategoryTransfer;
 }

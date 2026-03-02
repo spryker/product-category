@@ -24,10 +24,6 @@ class CategoryReader implements CategoryReaderInterface
      */
     protected $categoryFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface $categoryRepository
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryInterface $categoryFacade
-     */
     public function __construct(
         ProductCategoryRepositoryInterface $categoryRepository,
         ProductCategoryToCategoryInterface $categoryFacade
@@ -36,12 +32,6 @@ class CategoryReader implements CategoryReaderInterface
         $this->categoryFacade = $categoryFacade;
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return \Generated\Shared\Transfer\CategoryCollectionTransfer
-     */
     public function getCategoryTransferCollectionByIdProductAbstract(int $idProductAbstract, LocaleTransfer $localeTransfer): CategoryCollectionTransfer
     {
         return $this->categoryRepository->getCategoryTransferCollectionByIdProductAbstract($idProductAbstract, $localeTransfer->getIdLocale());

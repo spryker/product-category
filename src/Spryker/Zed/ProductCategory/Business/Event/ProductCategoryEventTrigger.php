@@ -32,10 +32,6 @@ class ProductCategoryEventTrigger implements ProductCategoryEventTriggerInterfac
      */
     protected ProductCategoryToEventInterface $eventFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface $productCategoryRepository
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToEventInterface $eventFacade
-     */
     public function __construct(
         ProductCategoryRepositoryInterface $productCategoryRepository,
         ProductCategoryToEventInterface $eventFacade
@@ -44,11 +40,6 @@ class ProductCategoryEventTrigger implements ProductCategoryEventTriggerInterfac
         $this->eventFacade = $eventFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CategoryTransfer $categoryTransfer
-     *
-     * @return void
-     */
     public function triggerProductUpdateEventsForCategory(CategoryTransfer $categoryTransfer): void
     {
         $productCategoryCollectionTransfer = $this->productCategoryRepository->findProductCategoryChildrenMappingsByCategoryNodeIds(

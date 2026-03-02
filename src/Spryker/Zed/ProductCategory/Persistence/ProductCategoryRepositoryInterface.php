@@ -13,12 +13,6 @@ use Generated\Shared\Transfer\ProductCategoryCriteriaTransfer;
 
 interface ProductCategoryRepositoryInterface
 {
-    /**
-     * @param int $idProductAbstract
-     * @param int $idLocale
-     *
-     * @return \Generated\Shared\Transfer\CategoryCollectionTransfer
-     */
     public function getCategoryTransferCollectionByIdProductAbstract(int $idProductAbstract, int $idLocale): CategoryCollectionTransfer;
 
     /**
@@ -28,11 +22,6 @@ interface ProductCategoryRepositoryInterface
      */
     public function getProductConcreteIdsByCategoryIds(array $categoryIds): array;
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductCategoryCollectionTransfer
-     */
     public function getProductCategoryCollection(ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer): ProductCategoryCollectionTransfer;
 
     /**

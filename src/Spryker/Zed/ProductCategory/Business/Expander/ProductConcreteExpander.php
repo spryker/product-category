@@ -35,10 +35,6 @@ class ProductConcreteExpander implements ProductConcreteExpanderInterface
      */
     protected $categoryFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface $productCategoryRepository
-     * @param \Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryInterface $categoryFacade
-     */
     public function __construct(ProductCategoryRepositoryInterface $productCategoryRepository, ProductCategoryToCategoryInterface $categoryFacade)
     {
         $this->productCategoryRepository = $productCategoryRepository;
