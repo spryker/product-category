@@ -52,7 +52,7 @@ class ProductCategoryAssignPage
     /**
      * @var string
      */
-    public const SELECTOR_TABLE_SEARCH = '.dataTables_filter input[type="search"]';
+    public const SELECTOR_TABLE_SEARCH = 'input#dt-search-0';
 
     /**
      * @var string
