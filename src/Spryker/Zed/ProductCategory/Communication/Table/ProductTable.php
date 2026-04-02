@@ -10,6 +10,7 @@ namespace Spryker\Zed\ProductCategory\Communication\Table;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Orm\Zed\Product\Persistence\Map\SpyProductAbstractLocalizedAttributesTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductAbstractTableMap;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Spryker\Zed\Gui\Communication\Table\AbstractTable;
 use Spryker\Zed\Gui\Communication\Table\TableConfiguration;
 use Spryker\Zed\ProductCategory\Dependency\Service\ProductCategoryToUtilEncodingInterface;
@@ -96,6 +97,11 @@ class ProductTable extends AbstractTable
         $config->setDefaultSortField(SpyProductAbstractTableMap::COL_ID_PRODUCT_ABSTRACT, TableConfiguration::SORT_ASC);
 
         return $config;
+    }
+
+    protected function countTotal(ModelCriteria $query): int
+    {
+        return $this->productCategoryQueryContainer->countProductsAbstractForAssignment($this->idCategory, $this->locale);
     }
 
     /**

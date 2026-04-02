@@ -88,6 +88,20 @@ interface ProductCategoryQueryContainerInterface extends QueryContainerInterface
 
     /**
      * Specification:
+     * - Returns the total count of product abstracts not yet assigned to the given category for the given locale.
+     * - Uses a minimal query without GROUP BY to avoid the Propel subquery wrapper, for performance with large catalogs.
+     *
+     * @api
+     *
+     * @param int $idCategory
+     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
+     *
+     * @return int
+     */
+    public function countProductsAbstractForAssignment(int $idCategory, LocaleTransfer $localeTransfer): int;
+
+    /**
+     * Specification:
      * - TODO: Add method specification.
      *
      * @api

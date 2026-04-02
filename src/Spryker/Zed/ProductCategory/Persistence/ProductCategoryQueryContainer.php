@@ -176,19 +176,79 @@ class ProductCategoryQueryContainer extends AbstractQueryContainer implements Pr
      */
     public function queryProductsAbstractBySearchTermForAssignment($term, $idCategory, LocaleTransfer $localeTransfer)
     {
-        $query = $this->queryProductsAbstractBySearchTerm($term, $localeTransfer);
+        $query = $this->getFactory()->createProductAbstractQuery();
+
         $query->addJoin(
+            SpyProductAbstractTableMap::COL_ID_PRODUCT_ABSTRACT,
+            SpyProductAbstractLocalizedAttributesTableMap::COL_FK_PRODUCT_ABSTRACT,
+            Criteria::INNER_JOIN,
+        )
+        ->addAnd(
+            SpyProductAbstractLocalizedAttributesTableMap::COL_FK_LOCALE,
+            $localeTransfer->getIdLocale(),
+            Criteria::EQUAL,
+        )
+        ->addJoin(
             [SpyProductAbstractTableMap::COL_ID_PRODUCT_ABSTRACT, $idCategory],
             [SpyProductCategoryTableMap::COL_FK_PRODUCT_ABSTRACT, SpyProductCategoryTableMap::COL_FK_CATEGORY],
             Criteria::LEFT_JOIN,
         )
+        ->addAnd(
+            SpyProductCategoryTableMap::COL_FK_CATEGORY,
+            null,
+            Criteria::ISNULL,
+        )
+        ->withColumn(
+            SpyProductAbstractLocalizedAttributesTableMap::COL_NAME,
+            'name',
+        )
+        ->groupByIdProductAbstract();
+
+        if (trim((string)$term) !== '') {
+            $term = '%' . mb_strtoupper($term) . '%';
+
+            $query->where('UPPER(' . SpyProductAbstractTableMap::COL_SKU . ') LIKE ?', $term, PDO::PARAM_STR)
+                ->_or()
+                ->where('UPPER(' . SpyProductAbstractLocalizedAttributesTableMap::COL_NAME . ') LIKE ?', $term, PDO::PARAM_STR);
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param int $idCategory
+     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
+     *
+     * @return int
+     */
+    public function countProductsAbstractForAssignment(int $idCategory, LocaleTransfer $localeTransfer): int
+    {
+        return $this->getFactory()->createProductAbstractQuery()
+            ->addJoin(
+                SpyProductAbstractTableMap::COL_ID_PRODUCT_ABSTRACT,
+                SpyProductAbstractLocalizedAttributesTableMap::COL_FK_PRODUCT_ABSTRACT,
+                Criteria::INNER_JOIN,
+            )
+            ->addAnd(
+                SpyProductAbstractLocalizedAttributesTableMap::COL_FK_LOCALE,
+                $localeTransfer->getIdLocale(),
+                Criteria::EQUAL,
+            )
+            ->addJoin(
+                [SpyProductAbstractTableMap::COL_ID_PRODUCT_ABSTRACT, $idCategory],
+                [SpyProductCategoryTableMap::COL_FK_PRODUCT_ABSTRACT, SpyProductCategoryTableMap::COL_FK_CATEGORY],
+                Criteria::LEFT_JOIN,
+            )
             ->addAnd(
                 SpyProductCategoryTableMap::COL_FK_CATEGORY,
                 null,
                 Criteria::ISNULL,
-            );
-
-        return $query;
+            )
+            ->count();
     }
 
     /**
@@ -239,6 +299,7 @@ class ProductCategoryQueryContainer extends AbstractQueryContainer implements Pr
         );
 
         $query->groupByAttributes();
+
         $query->groupByIdProductAbstract();
 
         if (trim($term) !== '') {
