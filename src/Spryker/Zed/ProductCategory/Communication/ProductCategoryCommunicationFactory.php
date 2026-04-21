@@ -10,6 +10,10 @@ namespace Spryker\Zed\ProductCategory\Communication;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
 use Spryker\Zed\ProductCategory\Communication\Form\AssignForm;
+use Spryker\Zed\ProductCategory\Communication\Form\DataProvider\ProductCategoryAbstractFormDataProvider;
+use Spryker\Zed\ProductCategory\Communication\Form\DataProvider\ProductCategoryAbstractFormDataProviderInterface;
+use Spryker\Zed\ProductCategory\Communication\Form\Expander\ProductCategoryIdsProductFormExpander;
+use Spryker\Zed\ProductCategory\Communication\Form\Expander\ProductCategoryIdsProductFormExpanderInterface;
 use Spryker\Zed\ProductCategory\Communication\Table\ProductCategoryTable;
 use Spryker\Zed\ProductCategory\Communication\Table\ProductTable;
 use Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryBridge;
@@ -99,5 +103,21 @@ class ProductCategoryCommunicationFactory extends AbstractCommunicationFactory
     public function getEventFacade()
     {
         return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_EVENT);
+    }
+
+    public function createProductCategoryIdsProductFormExpander(): ProductCategoryIdsProductFormExpanderInterface
+    {
+        return new ProductCategoryIdsProductFormExpander(
+            $this->createProductCategoryAbstractFormDataProvider(),
+        );
+    }
+
+    public function createProductCategoryAbstractFormDataProvider(): ProductCategoryAbstractFormDataProviderInterface
+    {
+        return new ProductCategoryAbstractFormDataProvider(
+            $this->getCategoryFacade(),
+            $this->getLocaleFacade(),
+            $this->getFacade(),
+        );
     }
 }

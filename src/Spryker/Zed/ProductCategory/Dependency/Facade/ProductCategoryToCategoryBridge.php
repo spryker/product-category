@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\ProductCategory\Dependency\Facade;
 
+use Generated\Shared\Transfer\CategoryCollectionTransfer;
 use Generated\Shared\Transfer\CategoryCriteriaTransfer;
 use Generated\Shared\Transfer\CategoryTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
@@ -44,5 +45,10 @@ class ProductCategoryToCategoryBridge implements ProductCategoryToCategoryInterf
     public function findCategory(CategoryCriteriaTransfer $categoryCriteriaTransfer): ?CategoryTransfer
     {
         return $this->categoryFacade->findCategory($categoryCriteriaTransfer);
+    }
+
+    public function getCategoryOptionCollection(LocaleTransfer $localeTransfer): CategoryCollectionTransfer
+    {
+        return $this->categoryFacade->getCategoryOptionCollection($localeTransfer);
     }
 }

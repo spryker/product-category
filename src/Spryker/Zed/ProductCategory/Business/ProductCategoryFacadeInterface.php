@@ -10,6 +10,7 @@ namespace Spryker\Zed\ProductCategory\Business;
 use Generated\Shared\Transfer\CategoryCollectionTransfer;
 use Generated\Shared\Transfer\CategoryTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\ProductCategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryCriteriaTransfer;
 
@@ -196,4 +197,26 @@ interface ProductCategoryFacadeInterface
      * @return void
      */
     public function triggerProductAbstractUpdateEventsByCategoryEvents(array $eventEntityTransfers): void;
+
+    /**
+     * Specification:
+     * - Creates product category mappings for all category IDs provided in the transfer.
+     * - Requires `ProductAbstractTransfer.idProductAbstract` to be set.
+     * - Requires `ProductAbstractTransfer.categoryIds` to contain the IDs to assign.
+     *
+     * @api
+     */
+    public function createProductAbstractCategories(ProductAbstractTransfer $productAbstractTransfer): ProductAbstractTransfer;
+
+    /**
+     * Specification:
+     * - Updates product category mappings by diffing current assignments against the provided category IDs.
+     * - Adds new mappings for category IDs not yet assigned.
+     * - Removes mappings for category IDs no longer present.
+     * - Requires `ProductAbstractTransfer.idProductAbstract` to be set.
+     * - Requires `ProductAbstractTransfer.categoryIds` to contain the desired IDs.
+     *
+     * @api
+     */
+    public function updateProductAbstractCategories(ProductAbstractTransfer $productAbstractTransfer): ProductAbstractTransfer;
 }

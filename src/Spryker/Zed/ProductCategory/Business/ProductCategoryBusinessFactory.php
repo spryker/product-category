@@ -8,6 +8,8 @@
 namespace Spryker\Zed\ProductCategory\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractCreator;
+use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractCreatorInterface;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTrigger;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTriggerInterface;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpander;
@@ -17,6 +19,9 @@ use Spryker\Zed\ProductCategory\Business\Model\CategoryReader;
 use Spryker\Zed\ProductCategory\Business\Model\CategoryReaderInterface;
 use Spryker\Zed\ProductCategory\Business\Reader\ProductCategoryReader;
 use Spryker\Zed\ProductCategory\Business\Reader\ProductCategoryReaderInterface;
+use Spryker\Zed\ProductCategory\Business\Updater\ProductCategoryProductAbstractUpdater;
+use Spryker\Zed\ProductCategory\Business\Updater\ProductCategoryProductAbstractUpdaterInterface;
+use Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToLocaleInterface;
 use Spryker\Zed\ProductCategory\ProductCategoryDependencyProvider;
 
 /**
@@ -92,5 +97,26 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
             $this->getRepository(),
             $this->getEventFacade(),
         );
+    }
+
+    public function createProductCategoryProductAbstractCreator(): ProductCategoryProductAbstractCreatorInterface
+    {
+        return new ProductCategoryProductAbstractCreator(
+            $this->createProductCategoryManager(),
+        );
+    }
+
+    public function createProductCategoryProductAbstractUpdater(): ProductCategoryProductAbstractUpdaterInterface
+    {
+        return new ProductCategoryProductAbstractUpdater(
+            $this->createProductCategoryManager(),
+            $this->createCategoryReader(),
+            $this->getLocaleFacade(),
+        );
+    }
+
+    public function getLocaleFacade(): ProductCategoryToLocaleInterface
+    {
+        return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_LOCALE);
     }
 }
