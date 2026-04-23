@@ -210,6 +210,7 @@ interface ProductCategoryFacadeInterface
 
     /**
      * Specification:
+     * - If productAbstractTransfer.categoryIds is not modified, does nothing.
      * - Updates product category mappings by diffing current assignments against the provided category IDs.
      * - Adds new mappings for category IDs not yet assigned.
      * - Removes mappings for category IDs no longer present.

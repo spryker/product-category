@@ -28,6 +28,10 @@ class ProductCategoryProductAbstractUpdater implements ProductCategoryProductAbs
             return $productAbstractTransfer;
         }
 
+        if (!$productAbstractTransfer->isPropertyModified(ProductAbstractTransfer::CATEGORY_IDS)) {
+            return $productAbstractTransfer;
+        }
+
         $assignedCategoryIds = $this->getExistingCategoryIds($idProductAbstract);
         $categoryIdsToAssign = $productAbstractTransfer->getCategoryIds();
 
