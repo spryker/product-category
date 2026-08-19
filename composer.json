@@ -23,14 +23,11 @@
         "spryker/util-encoding": "^2.0.0"
     },
     "require-dev": {
-        "spryker/application": "*",
         "spryker/code-sniffer": "*",
-        "spryker/config": "*",
         "spryker/container": "*",
         "spryker/propel": "^3.0.0",
         "spryker/store": "*",
-        "spryker/testify": "*",
-        "spryker/zed-navigation": "*"
+        "spryker/testify": "*"
     },
     "autoload": {
         "psr-4": {
