@@ -11,15 +11,30 @@
 
     <transfer name="ProductCategoryCollection">
         <property name="productCategories" type="ProductCategory[]" singular="productCategory"/>
+        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="ProductCategoryCriteria">
         <property name="productCategoryConditions" type="ProductCategoryConditions"/>
+        <property name="sortCollection" type="Sort[]" singular="sort"/>
+        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="ProductCategoryConditions">
         <property name="localeIds" type="int[]" singular="idLocale"/>
         <property name="productAbstractIds" type="int[]" singular="idProductAbstract"/>
+        <property name="categoryIds" type="int[]" singular="idCategory"/>
+    </transfer>
+
+    <transfer name="Pagination">
+        <property name="limit" type="int"/>
+        <property name="offset" type="int"/>
+        <property name="nbResults" type="int"/>
+    </transfer>
+
+    <transfer name="Sort">
+        <property name="field" type="string"/>
+        <property name="isAscending" type="bool"/>
     </transfer>
 
     <transfer name="LocalizedAttributes">
@@ -63,10 +78,18 @@
         <property name="categoryIds" type="int[]" singular="idCategory"/>
         <property name="productCategories" type="ProductCategory[]" singular="productCategory" strict="true"/>
         <property name="categoryUuids" type="string[]" singular="categoryUuid" strict="true"/>
+        <property name="idProductAbstract" type="int"/>
+        <property name="sku" type="string"/>
+        <property name="localizedAttributes" type="LocalizedAttributes[]" singular="localizedAttributes"/>
     </transfer>
 
     <transfer name="ProductAbstractRelations" strict="true">
         <property name="withProductCategories" type="bool"/>
+        <property name="withLocalizedAttributes" type="bool"/>
+    </transfer>
+
+    <transfer name="ProductAbstractConditions" strict="true">
+        <property name="ids" type="array" singular="id"/>
     </transfer>
 
     <transfer name="ProductConcrete">
@@ -114,9 +137,12 @@
     </transfer>
 
     <transfer name="ProductAbstractCollection">
+        <property name="productAbstracts" type="ProductAbstract[]" singular="productAbstract"/>
     </transfer>
 
     <transfer name="ProductAbstractCriteria" strict="true">
+        <property name="productAbstractConditions" type="ProductAbstractConditions"/>
+        <property name="productAbstractRelations" type="ProductAbstractRelations"/>
     </transfer>
 
 </transfers>

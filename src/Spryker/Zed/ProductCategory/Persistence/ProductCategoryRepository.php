@@ -8,8 +8,10 @@
 namespace Spryker\Zed\ProductCategory\Persistence;
 
 use Generated\Shared\Transfer\CategoryCollectionTransfer;
+use Generated\Shared\Transfer\PaginationTransfer;
 use Generated\Shared\Transfer\ProductCategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryCriteriaTransfer;
+use Generated\Shared\Transfer\ProductCategoryTransfer;
 use Orm\Zed\Category\Persistence\Map\SpyCategoryAttributeTableMap;
 use Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductTableMap;
@@ -33,6 +35,13 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
      * @uses \Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap::COL_UUID
      */
     protected const string COLUMN_UUID = 'uuid';
+
+    /**
+     * @var array<string, string>
+     */
+    protected const array SORTABLE_COLUMNS = [
+        ProductCategoryTransfer::PRODUCT_ORDER => SpyProductCategoryTableMap::COL_PRODUCT_ORDER,
+    ];
 
     public function getCategoryTransferCollectionByIdProductAbstract(int $idProductAbstract, int $idLocale): CategoryCollectionTransfer
     {
@@ -116,13 +125,67 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
             ->setFormatter(ModelCriteria::FORMAT_ARRAY);
 
         $productCategoryQuery = $this->applyProductCategoryFilters($productCategoryQuery, $productCategoryCriteriaTransfer);
+        $productCategoryQuery = $this->applyProductCategorySorting($productCategoryQuery, $productCategoryCriteriaTransfer);
+
+        $productCategoryCollectionTransfer = new ProductCategoryCollectionTransfer();
+        $paginationTransfer = $productCategoryCriteriaTransfer->getPagination();
+        if ($paginationTransfer !== null) {
+            $productCategoryQuery = $this->applyProductCategoryPagination($productCategoryQuery, $productCategoryCriteriaTransfer, $paginationTransfer);
+            $productCategoryCollectionTransfer->setPagination($paginationTransfer);
+        }
 
         return $this->getFactory()
             ->createProductCategoryMapper()
             ->mapProductCategoryArrayToProductCategoryCollectionTransfer(
                 $productCategoryQuery->find(),
-                new ProductCategoryCollectionTransfer(),
+                $productCategoryCollectionTransfer,
             );
+    }
+
+    protected function applyProductCategoryPagination(
+        SpyProductCategoryQuery $productCategoryQuery,
+        ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer,
+        PaginationTransfer $paginationTransfer
+    ): SpyProductCategoryQuery {
+        $productCategoryPageQuery = $this->getFactory()->createProductCategoryQuery();
+        $productCategoryPageQuery = $this->applyProductCategoryMappingFilters($productCategoryPageQuery, $productCategoryCriteriaTransfer);
+        $productCategoryPageQuery = $this->applyProductCategorySorting($productCategoryPageQuery, $productCategoryCriteriaTransfer);
+
+        $paginationTransfer->setNbResults($productCategoryPageQuery->count());
+
+        if ($paginationTransfer->getOffset() !== null && $paginationTransfer->getLimit() !== null) {
+            $productCategoryPageQuery
+                ->limit($paginationTransfer->getLimitOrFail())
+                ->offset($paginationTransfer->getOffsetOrFail());
+        }
+
+        /** @var array<int> $productCategoryIds */
+        $productCategoryIds = $productCategoryPageQuery
+            ->select([SpyProductCategoryTableMap::COL_ID_PRODUCT_CATEGORY])
+            ->find()
+            ->getData();
+
+        return $productCategoryQuery->filterByIdProductCategory_In($productCategoryIds);
+    }
+
+    protected function applyProductCategorySorting(
+        SpyProductCategoryQuery $productCategoryQuery,
+        ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer
+    ): SpyProductCategoryQuery {
+        if ($productCategoryCriteriaTransfer->getSortCollection()->count() === 0) {
+            return $productCategoryQuery;
+        }
+
+        foreach ($productCategoryCriteriaTransfer->getSortCollection() as $sortTransfer) {
+            $sortColumn = static::SORTABLE_COLUMNS[$sortTransfer->getFieldOrFail()] ?? null;
+            if ($sortColumn === null) {
+                continue;
+            }
+
+            $productCategoryQuery->orderBy($sortColumn, $sortTransfer->getIsAscending() ? Criteria::ASC : Criteria::DESC);
+        }
+
+        return $productCategoryQuery->orderByIdProductCategory(Criteria::ASC);
     }
 
     /**
@@ -164,9 +227,7 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
             return $productCategoryQuery;
         }
 
-        if ($productCategoryConditionsTransfer->getProductAbstractIds()) {
-            $productCategoryQuery->filterByFkProductAbstract_In($productCategoryConditionsTransfer->getProductAbstractIds());
-        }
+        $productCategoryQuery = $this->applyProductCategoryMappingFilters($productCategoryQuery, $productCategoryCriteriaTransfer);
 
         if ($productCategoryConditionsTransfer->getLocaleIds()) {
             $productCategoryQuery
@@ -175,6 +236,27 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
                         ->filterByFkLocale_In($productCategoryConditionsTransfer->getLocaleIds())
                     ->endUse()
                 ->endUse();
+        }
+
+        return $productCategoryQuery;
+    }
+
+    protected function applyProductCategoryMappingFilters(
+        SpyProductCategoryQuery $productCategoryQuery,
+        ProductCategoryCriteriaTransfer $productCategoryCriteriaTransfer
+    ): SpyProductCategoryQuery {
+        $productCategoryConditionsTransfer = $productCategoryCriteriaTransfer->getProductCategoryConditions();
+
+        if (!$productCategoryConditionsTransfer) {
+            return $productCategoryQuery;
+        }
+
+        if ($productCategoryConditionsTransfer->getProductAbstractIds()) {
+            $productCategoryQuery->filterByFkProductAbstract_In($productCategoryConditionsTransfer->getProductAbstractIds());
+        }
+
+        if ($productCategoryConditionsTransfer->getCategoryIds()) {
+            $productCategoryQuery->filterByFkCategory_In($productCategoryConditionsTransfer->getCategoryIds());
         }
 
         return $productCategoryQuery;

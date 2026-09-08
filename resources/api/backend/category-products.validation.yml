@@ -1,0 +1,6 @@
+post:
+    skus:
+        - Optional:
+              constraints:
+                  - Count:
+                        max: 100

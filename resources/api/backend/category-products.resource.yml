@@ -1,0 +1,156 @@
+resource:
+    name: CategoriesProducts
+    shortName: category-products
+    description: 'Read, assign and unassign product assignments (abstract SKUs) of a category for the Back Office'
+
+    provider: Spryker\Glue\ProductCategory\Api\Backend\Provider\CategoryProductsBackendProvider
+    processor: Spryker\Glue\ProductCategory\Api\Backend\Processor\CategoryProductsBackendProcessor
+
+    paginationEnabled: true
+    paginationItemsPerPage: 10
+
+    security: "is_granted('ROLE_USER')"
+
+    operations:
+        - type: GetCollection
+          name: getCategoryProducts
+          description: >-
+              Retrieve the paginated list of products assigned to the category, ordered by the
+              assignment position (`product_order`) ascending.
+              Pagination (JSON:API): `page[limit]` (default 10), `page[offset]` (default 0); the
+              pagination summary is returned as top-level `meta.pagination` with `links.first/last/prev/next`.
+          uriTemplate: '/categories/{categoryKey}/products'
+          uriVariables:
+              categoryKey: { identifiers: [categoryKey] }
+          openapiContext:
+              summary: 'List products assigned to a category'
+              responses:
+                  200: { description: 'Assigned products returned, with JSON:API pagination links.' }
+                  404: { description: 'Category not found.' }
+
+        - type: Get
+          name: getCategoryProduct
+          description: 'Retrieve one product assignment of the category by abstract SKU.'
+          uriTemplate: '/categories/{categoryKey}/products/{sku}'
+          uriVariables:
+              categoryKey: { identifiers: [categoryKey] }
+              sku: { identifiers: [sku] }
+          openapiContext:
+              summary: 'Retrieve a product assignment of a category'
+              responses:
+                  200: { description: 'Assignment returned.' }
+                  404:
+                      {
+                          description: 'Category not found, product not found, or the product is not assigned to this category.',
+                      }
+
+        - type: Post
+          name: assignProducts
+          description: >-
+              Assign products to the category. The body carries `skus` — a required, non-empty
+              array of at most 100 abstract product SKUs. All-or-nothing (transactional): if any SKU is
+              unknown, nothing is assigned and the offending SKUs are listed in the error.
+              Already-assigned SKUs are ignored (idempotent, additive).
+          uriTemplate: '/categories/{categoryKey}/assign-products'
+          uriVariables:
+              categoryKey: { identifiers: [categoryKey] }
+          deserialize: true
+          read: false
+          output: false
+          status: 204
+          openapiContext:
+              summary: 'Assign products to a category'
+              responses:
+                  204:
+                      {
+                          description: 'The requested products are assigned to the category (already-assigned SKUs are ignored).',
+                      }
+                  400: { description: 'The body must carry a non-empty `skus` array.' }
+                  404: { description: 'Category not found.' }
+                  422:
+                      {
+                          description: 'More than 100 SKUs were sent, or one or more SKUs are unknown; none assigned. `errors[]` carries one entry per unknown SKU.',
+                      }
+
+        - type: Post
+          name: unassignProducts
+          description: >-
+              Unassign products from the category. The body carries EITHER `skus` (non-empty array
+              of at most 100 abstract product SKUs) OR `all: true` — exactly one of the two. The SKU list is
+              all-or-nothing (transactional): if any SKU is unknown or not assigned to the
+              category, nothing is removed and the offending SKUs are listed in the error.
+              `all: true` removes every product assignment of the category and is idempotent.
+          uriTemplate: '/categories/{categoryKey}/unassign-products'
+          uriVariables:
+              categoryKey: { identifiers: [categoryKey] }
+          deserialize: true
+          read: false
+          output: false
+          status: 204
+          openapiContext:
+              summary: 'Unassign products from a category'
+              responses:
+                  204: { description: 'The requested products (or all products) are unassigned from the category.' }
+                  400:
+                      {
+                          description: 'The body must carry either a non-empty `skus` array or `all: true` — exactly one of the two.',
+                      }
+                  404: { description: 'Category not found.' }
+                  422:
+                      {
+                          description: 'More than 100 SKUs were sent, or one or more SKUs are unknown or not assigned; none removed. `errors[]` carries one entry per offending SKU.',
+                      }
+
+    properties:
+        sku:
+            type: string
+            identifier: true
+            writable: false
+            readable: true
+            description: 'Abstract SKU of the assigned product.'
+            openapiContext:
+                example: '001'
+
+        name:
+            type: string
+            writable: false
+            readable: true
+            nullable: true
+            description: 'Localized name of the assigned product (request locale, falling back to the default backend locale).'
+            openapiContext:
+                example: 'Canon IXUS 160'
+
+        position:
+            type: integer
+            writable: false
+            readable: true
+            nullable: true
+            description: 'Position of the assignment among the category products (`product_order`); the collection is ordered by it ascending.'
+            openapiContext:
+                example: 1
+
+        categoryKey:
+            type: string
+            writable: false
+            readable: false
+            description: 'categoryKey of the category the products are assigned to / unassigned from (URI variable).'
+            openapiContext:
+                example: 'digital-cameras'
+
+        skus:
+            type: array
+            writable: true
+            readable: false
+            nullable: true
+            description: 'Abstract product SKUs to assign/unassign, at most 100 per request. Required for assign-products; for unassign-products it is mutually exclusive with `all`.'
+            openapiContext:
+                example: ['001', '002']
+
+        all:
+            type: boolean
+            writable: true
+            readable: false
+            nullable: true
+            description: 'unassign-products only: set to true to unassign ALL products from the category. Mutually exclusive with `skus`.'
+            openapiContext:
+                example: false

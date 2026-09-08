@@ -152,6 +152,10 @@ interface ProductCategoryFacadeInterface
     /**
      * Specification:
      * - Retrieves product categories by criteria from Persistence.
+     * - Filters by `ProductCategoryConditions.productAbstractIds` and `ProductCategoryConditions.categoryIds`.
+     * - `ProductCategoryConditions.localeIds` restricts the localized attributes of the related category.
+     * - Sorts by `ProductCategoryCriteria.sortCollection`; the only supported field is `ProductCategoryTransfer::PRODUCT_ORDER`, unknown fields are ignored.
+     * - Paginates by `ProductCategoryCriteria.pagination` (`limit`/`offset`), sets `Pagination.nbResults` and returns it in `ProductCategoryCollection.pagination`.
      *
      * @api
      *

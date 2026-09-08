@@ -23,11 +23,15 @@
         "spryker/util-encoding": "^2.0.0"
     },
     "require-dev": {
+        "spryker/api-platform": "*",
         "spryker/code-sniffer": "*",
         "spryker/container": "*",
         "spryker/propel": "^3.0.0",
         "spryker/store": "*",
         "spryker/testify": "*"
+    },
+    "suggest": {
+        "spryker/api-platform": "Required to expose the category-products Backend API resource; without it the resource schema is never discovered."
     },
     "autoload": {
         "psr-4": {
