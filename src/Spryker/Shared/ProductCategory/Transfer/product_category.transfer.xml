@@ -61,6 +61,12 @@
 
     <transfer name="ProductAbstract">
         <property name="categoryIds" type="int[]" singular="idCategory"/>
+        <property name="productCategories" type="ProductCategory[]" singular="productCategory" strict="true"/>
+        <property name="categoryUuids" type="string[]" singular="categoryUuid" strict="true"/>
+    </transfer>
+
+    <transfer name="ProductAbstractRelations" strict="true">
+        <property name="withProductCategories" type="bool"/>
     </transfer>
 
     <transfer name="ProductConcrete">
@@ -105,6 +111,12 @@
 
     <transfer name="CategoryConditions" strict="true">
         <property name="categoryIds" type="int[]" singular="idCategory"/>
+    </transfer>
+
+    <transfer name="ProductAbstractCollection">
+    </transfer>
+
+    <transfer name="ProductAbstractCriteria" strict="true">
     </transfer>
 
 </transfers>

@@ -8,6 +8,7 @@
 namespace SprykerTest\Zed\ProductCategory\Persistence;
 
 use Codeception\Test\Unit;
+use Orm\Zed\Category\Persistence\SpyCategoryQuery;
 use Propel\Runtime\Propel;
 use Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepository;
 
@@ -57,6 +58,11 @@ class ProductCategoryRepositoryTest extends Unit
      * @var string
      */
     protected const CATEGORY_ATTRIBUTE_3 = 'CATEGORY_ATTRIBUTE_3';
+
+    /**
+     * @var string
+     */
+    protected const UNKNOWN_UUID = '00000000-0000-0000-0000-000000000000';
 
     /**
      * @var \SprykerTest\Zed\ProductCategory\ProductCategoryPersistenceTester
@@ -210,5 +216,83 @@ class ProductCategoryRepositoryTest extends Unit
         $categoryTransfer = $categoryCollectionTransfer->getCategories()->offsetGet(0);
 
         $this->tester->assertCategoryContainsNecessaryLocales($categoryTransfer, [static::LOCALE_NAMES[0]]);
+    }
+
+    public function testGetCategoryIdsByUuidsReturnsIdsForKnownUuids(): void
+    {
+        // Arrange
+        $categoryTransfer = $this->tester->haveLocalizedCategory();
+        $categoryUuid = $this->findCategoryUuid($categoryTransfer->getIdCategory());
+
+        // Act
+        $categoryIds = (new ProductCategoryRepository())->getCategoryIdsByUuids([$categoryUuid]);
+
+        // Assert
+        $this->assertCount(1, $categoryIds);
+        $this->assertEquals($categoryTransfer->getIdCategory(), $categoryIds[0]);
+    }
+
+    public function testGetCategoryIdsByUuidsReturnsOnlyKnownIdsForMixedUuids(): void
+    {
+        // Arrange
+        $categoryTransfer = $this->tester->haveLocalizedCategory();
+        $categoryUuid = $this->findCategoryUuid($categoryTransfer->getIdCategory());
+
+        // Act
+        $categoryIds = (new ProductCategoryRepository())->getCategoryIdsByUuids([$categoryUuid, static::UNKNOWN_UUID]);
+
+        // Assert
+        $this->assertCount(1, $categoryIds);
+        $this->assertEquals($categoryTransfer->getIdCategory(), $categoryIds[0]);
+    }
+
+    public function testGetCategoryIdsByUuidsReturnsEmptyArrayForUnknownUuid(): void
+    {
+        // Act
+        $categoryIds = (new ProductCategoryRepository())->getCategoryIdsByUuids([static::UNKNOWN_UUID]);
+
+        // Assert
+        $this->assertSame([], $categoryIds);
+    }
+
+    public function testGetCategoryIdsByUuidsReturnsEmptyArrayForEmptyUuidList(): void
+    {
+        // Act
+        $categoryIds = (new ProductCategoryRepository())->getCategoryIdsByUuids([]);
+
+        // Assert
+        $this->assertSame([], $categoryIds);
+    }
+
+    public function testGetCategoryIdsByUuidsReturnsEmptyArrayWhenCategoryUuidIsNotSupported(): void
+    {
+        // Arrange
+        $categoryTransfer = $this->tester->haveLocalizedCategory();
+        $categoryUuid = $this->findCategoryUuid($categoryTransfer->getIdCategory());
+
+        $productCategoryRepository = new class extends ProductCategoryRepository
+        {
+            protected function isCategoryUuidSupported(): bool
+            {
+                return false;
+            }
+        };
+
+        // Act
+        $categoryIds = $productCategoryRepository->getCategoryIdsByUuids([$categoryUuid]);
+
+        // Assert
+        $this->assertSame([], $categoryIds);
+    }
+
+    protected function findCategoryUuid(int $idCategory): string
+    {
+        $categoryEntity = SpyCategoryQuery::create()->findOneByIdCategory($idCategory);
+        $this->assertNotNull($categoryEntity);
+
+        $uuid = $categoryEntity->getUuid();
+        $this->assertNotNull($uuid);
+
+        return $uuid;
     }
 }

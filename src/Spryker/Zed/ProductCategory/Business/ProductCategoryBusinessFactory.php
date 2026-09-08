@@ -12,6 +12,8 @@ use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractC
 use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractCreatorInterface;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTrigger;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTriggerInterface;
+use Spryker\Zed\ProductCategory\Business\Expander\ProductAbstractCollectionExpander;
+use Spryker\Zed\ProductCategory\Business\Expander\ProductAbstractCollectionExpanderInterface;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpander;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpanderInterface;
 use Spryker\Zed\ProductCategory\Business\Manager\ProductCategoryManager;
@@ -103,6 +105,7 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
     {
         return new ProductCategoryProductAbstractCreator(
             $this->createProductCategoryManager(),
+            $this->getRepository(),
         );
     }
 
@@ -112,6 +115,14 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
             $this->createProductCategoryManager(),
             $this->createCategoryReader(),
             $this->getLocaleFacade(),
+            $this->getRepository(),
+        );
+    }
+
+    public function createProductAbstractCollectionExpander(): ProductAbstractCollectionExpanderInterface
+    {
+        return new ProductAbstractCollectionExpander(
+            $this->getRepository(),
         );
     }
 

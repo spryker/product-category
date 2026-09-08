@@ -37,4 +37,11 @@ interface ProductCategoryRepositoryInterface
      * @return \Generated\Shared\Transfer\ProductCategoryCollectionTransfer
      */
     public function findProductCategoryByCategoryIds(array $categoryIds): ProductCategoryCollectionTransfer;
+
+    /**
+     * @param array<string> $uuids
+     *
+     * @return array<int>
+     */
+    public function getCategoryIdsByUuids(array $uuids): array;
 }

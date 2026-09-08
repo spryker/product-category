@@ -9,6 +9,7 @@ namespace Spryker\Zed\ProductCategory\Persistence;
 
 use Orm\Zed\Category\Persistence\SpyCategoryClosureTableQuery;
 use Orm\Zed\Category\Persistence\SpyCategoryNodeQuery;
+use Orm\Zed\Category\Persistence\SpyCategoryQuery;
 use Orm\Zed\Product\Persistence\SpyProductAbstractQuery;
 use Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
@@ -58,5 +59,10 @@ class ProductCategoryPersistenceFactory extends AbstractPersistenceFactory
     public function createCategoryClosureTableQuery(): SpyCategoryClosureTableQuery
     {
         return SpyCategoryClosureTableQuery::create();
+    }
+
+    public function createCategoryQuery(): SpyCategoryQuery
+    {
+        return SpyCategoryQuery::create();
     }
 }

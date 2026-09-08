@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\CategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryCriteriaTransfer;
 use Orm\Zed\Category\Persistence\Map\SpyCategoryAttributeTableMap;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductTableMap;
 use Orm\Zed\ProductCategory\Persistence\Map\SpyProductCategoryTableMap;
 use Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery;
@@ -27,6 +28,11 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
      * @var string
      */
     protected const TABLE_JOIN_CATEGORY = 'Category';
+
+    /**
+     * @uses \Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap::COL_UUID
+     */
+    protected const string COLUMN_UUID = 'uuid';
 
     public function getCategoryTransferCollectionByIdProductAbstract(int $idProductAbstract, int $idLocale): CategoryCollectionTransfer
     {
@@ -192,5 +198,31 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
         $categoryNodeIds = array_column($categoryNodes, 'id_category_node');
 
         return $this->findProductCategoryChildrenMappingsByCategoryNodeIds($categoryNodeIds);
+    }
+
+    /**
+     * @module Category
+     *
+     * @param array<string> $uuids
+     *
+     * @return array<int>
+     */
+    public function getCategoryIdsByUuids(array $uuids): array
+    {
+        if (!$this->isCategoryUuidSupported()) {
+            return [];
+        }
+
+        return $this->getFactory()
+            ->createCategoryQuery()
+            ->filterByUuid_In($uuids)
+            ->select([SpyCategoryTableMap::COL_ID_CATEGORY])
+            ->find()
+            ->getData();
+    }
+
+    protected function isCategoryUuidSupported(): bool
+    {
+        return SpyCategoryTableMap::getTableMap()->hasColumn(static::COLUMN_UUID);
     }
 }

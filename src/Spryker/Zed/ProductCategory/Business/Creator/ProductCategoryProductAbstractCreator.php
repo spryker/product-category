@@ -9,11 +9,13 @@ namespace Spryker\Zed\ProductCategory\Business\Creator;
 
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Zed\ProductCategory\Business\Manager\ProductCategoryManagerInterface;
+use Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface;
 
 class ProductCategoryProductAbstractCreator implements ProductCategoryProductAbstractCreatorInterface
 {
     public function __construct(
         protected readonly ProductCategoryManagerInterface $productCategoryManager,
+        protected readonly ProductCategoryRepositoryInterface $productCategoryRepository,
     ) {
     }
 
@@ -24,10 +26,32 @@ class ProductCategoryProductAbstractCreator implements ProductCategoryProductAbs
             return $productAbstractTransfer;
         }
 
-        foreach ($productAbstractTransfer->getCategoryIds() as $idCategory) {
+        $categoryIds = $this->resolveCategoryIds($productAbstractTransfer);
+
+        foreach ($categoryIds as $idCategory) {
             $this->productCategoryManager->createProductCategoryMappings($idCategory, [$idProductAbstract]);
         }
 
         return $productAbstractTransfer;
+    }
+
+    /**
+     * @return array<int>
+     */
+    protected function resolveCategoryIds(ProductAbstractTransfer $productAbstractTransfer): array
+    {
+        $categoryIds = $productAbstractTransfer->getCategoryIds();
+
+        if ($categoryIds !== []) {
+            return $categoryIds;
+        }
+
+        $categoryUuids = $productAbstractTransfer->getCategoryUuids();
+
+        if ($categoryUuids === []) {
+            return [];
+        }
+
+        return $this->productCategoryRepository->getCategoryIdsByUuids($categoryUuids);
     }
 }

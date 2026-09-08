@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Zed\ProductCategory\Business\Manager\ProductCategoryManagerInterface;
 use Spryker\Zed\ProductCategory\Business\Model\CategoryReaderInterface;
 use Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToLocaleInterface;
+use Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface;
 
 class ProductCategoryProductAbstractUpdater implements ProductCategoryProductAbstractUpdaterInterface
 {
@@ -18,6 +19,7 @@ class ProductCategoryProductAbstractUpdater implements ProductCategoryProductAbs
         protected readonly ProductCategoryManagerInterface $productCategoryManager,
         protected readonly CategoryReaderInterface $categoryReader,
         protected readonly ProductCategoryToLocaleInterface $localeFacade,
+        protected readonly ProductCategoryRepositoryInterface $productCategoryRepository,
     ) {
     }
 
@@ -28,12 +30,13 @@ class ProductCategoryProductAbstractUpdater implements ProductCategoryProductAbs
             return $productAbstractTransfer;
         }
 
-        if (!$productAbstractTransfer->isPropertyModified(ProductAbstractTransfer::CATEGORY_IDS)) {
+        $categoryIdsToAssign = $this->resolveCategoryIds($productAbstractTransfer);
+
+        if ($categoryIdsToAssign === null) {
             return $productAbstractTransfer;
         }
 
         $assignedCategoryIds = $this->getExistingCategoryIds($idProductAbstract);
-        $categoryIdsToAssign = $productAbstractTransfer->getCategoryIds();
 
         foreach (array_diff($categoryIdsToAssign, $assignedCategoryIds) as $idCategory) {
             $this->productCategoryManager->createProductCategoryMappings($idCategory, [$idProductAbstract]);
@@ -44,6 +47,28 @@ class ProductCategoryProductAbstractUpdater implements ProductCategoryProductAbs
         }
 
         return $productAbstractTransfer;
+    }
+
+    /**
+     * @return array<int>|null
+     */
+    protected function resolveCategoryIds(ProductAbstractTransfer $productAbstractTransfer): ?array
+    {
+        if ($productAbstractTransfer->isPropertyModified(ProductAbstractTransfer::CATEGORY_IDS)) {
+            return $productAbstractTransfer->getCategoryIds();
+        }
+
+        if (!$productAbstractTransfer->isPropertyModified(ProductAbstractTransfer::CATEGORY_UUIDS)) {
+            return null;
+        }
+
+        $categoryUuids = $productAbstractTransfer->getCategoryUuids();
+
+        if ($categoryUuids === []) {
+            return [];
+        }
+
+        return $this->productCategoryRepository->getCategoryIdsByUuids($categoryUuids);
     }
 
     /**
