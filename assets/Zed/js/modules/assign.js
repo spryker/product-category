@@ -24,7 +24,7 @@ function removeActionHandler() {
     return false;
 }
 
-//TODO fix later, see here: https://spryker.atlassian.net/browse/CD-446
+// TODO fix later, see here: https://spryker.atlassian.net/browse/CD-446
 function ProductSelector() {
     var productSelector = {};
     var selectedProducts = {};
