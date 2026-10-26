@@ -49,6 +49,7 @@
         <property name="localizedAttributes" type="CategoryLocalizedAttributes[]" singular="localizedAttributes"/>
         <property name="nodeCollection" type="NodeCollection"/>
         <property name="parentCategoryNode" type="Node"/>
+        <property name="name" type="string"/>
     </transfer>
 
     <transfer name="Locale">
@@ -134,6 +135,7 @@
 
     <transfer name="CategoryConditions" strict="true">
         <property name="categoryIds" type="int[]" singular="idCategory"/>
+        <property name="categoryKeys" type="string[]" singular="categoryKey" strict="true" description="A collection of unique keys for categories."/>
     </transfer>
 
     <transfer name="ProductAbstractCollection">
