@@ -60,6 +60,7 @@
 
     <transfer name="CategoryLocalizedAttributes">
         <property name="locale" type="Locale"/>
+        <property name="name" type="string"/>
     </transfer>
 
     <transfer name="CategoryCollection">
@@ -147,4 +148,26 @@
         <property name="productAbstractRelations" type="ProductAbstractRelations"/>
     </transfer>
 
+    <transfer name="Item">
+        <property name="idProductAbstract" type="int"/>
+        <property name="categoryPath" type="string[]" singular="categoryName" description="The category names of the product, top level first, without the root category: set when the item is added to the cart, in the locale of that moment, and read from storage when the order details page shows an order item."/>
+    </transfer>
+
+    <transfer name="CartChange">
+        <property name="items" type="Item[]" singular="item"/>
+    </transfer>
+
+    <transfer name="Store">
+        <property name="idStore" type="int"/>
+    </transfer>
+
+    <transfer name="CategoryPathNode" strict="true">
+        <property name="idCategory" type="int" description="The ID of the category."/>
+        <property name="name" type="string" description="The name of the category in the locale of the path."/>
+        <property name="parentCategoryIds" type="int[]" singular="idParentCategory" description="The IDs of the parent categories of the category."/>
+    </transfer>
+
+    <transfer name="CategoryPathNodeCollection" strict="true">
+        <property name="nodes" type="CategoryPathNode[]" singular="node" description="The categories of a product with the categories above them; the categories without a parent among them are the top level."/>
+    </transfer>
 </transfers>

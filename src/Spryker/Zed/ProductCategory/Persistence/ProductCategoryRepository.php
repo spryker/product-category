@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\ProductCategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryCriteriaTransfer;
 use Generated\Shared\Transfer\ProductCategoryTransfer;
 use Orm\Zed\Category\Persistence\Map\SpyCategoryAttributeTableMap;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryClosureTableTableMap;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryNodeTableMap;
 use Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductTableMap;
 use Orm\Zed\ProductCategory\Persistence\Map\SpyProductCategoryTableMap;
@@ -306,5 +308,115 @@ class ProductCategoryRepository extends AbstractRepository implements ProductCat
     protected function isCategoryUuidSupported(): bool
     {
         return SpyCategoryTableMap::getTableMap()->hasColumn(static::COLUMN_UUID);
+    }
+
+    /**
+     * @module Category
+     *
+     * @param list<int> $productAbstractIds
+     *
+     * @return array<int, list<int>>
+     */
+    public function getCategoryNodeIdsIndexedByIdProductAbstract(array $productAbstractIds): array
+    {
+        if (!$productAbstractIds) {
+            return [];
+        }
+
+        $productCategoryNodeRows = $this->getFactory()
+            ->createProductCategoryQuery()
+            ->filterByFkProductAbstract_In($productAbstractIds)
+            ->useSpyCategoryQuery()
+                ->joinNode()
+            ->endUse()
+            ->select([
+                SpyProductCategoryTableMap::COL_FK_PRODUCT_ABSTRACT,
+                SpyCategoryNodeTableMap::COL_ID_CATEGORY_NODE,
+            ])
+            ->orderBy(SpyProductCategoryTableMap::COL_ID_PRODUCT_CATEGORY)
+            ->orderBy(SpyCategoryNodeTableMap::COL_ID_CATEGORY_NODE)
+            ->find()
+            ->getData();
+
+        return $this->getFactory()
+            ->createProductCategoryMapper()
+            ->mapProductCategoryNodeRowsToCategoryNodeIdsIndexedByIdProductAbstract($productCategoryNodeRows);
+    }
+
+    /**
+     * @module Category
+     *
+     * @param list<int> $categoryNodeIds
+     *
+     * @return array<int, \Generated\Shared\Transfer\NodeTransfer>
+     */
+    public function getActiveCategoryNodesWithAncestorsIndexedByIdCategoryNode(array $categoryNodeIds, int $idStore): array
+    {
+        if (!$categoryNodeIds) {
+            return [];
+        }
+
+        // The closure table lists every node above a node, and the node itself: the ancestors only, not the subtrees.
+        $categoryNodeIdsWithAncestors = $this->getFactory()
+            ->createCategoryClosureTableQuery()
+            ->filterByFkCategoryNodeDescendant_In($categoryNodeIds)
+            ->select([SpyCategoryClosureTableTableMap::COL_FK_CATEGORY_NODE])
+            ->distinct()
+            ->find()
+            ->getData();
+
+        if (!$categoryNodeIdsWithAncestors) {
+            return [];
+        }
+
+        $categoryNodeRows = $this->getFactory()
+            ->createCategoryNodeQuery()
+            ->filterByIdCategoryNode_In($categoryNodeIdsWithAncestors)
+            ->filterByIsRoot(false)
+            ->useCategoryQuery()
+                ->filterByIsActive(true)
+                ->useSpyCategoryStoreQuery()
+                    ->filterByFkStore($idStore)
+                ->endUse()
+            ->endUse()
+            ->select([
+                SpyCategoryNodeTableMap::COL_ID_CATEGORY_NODE,
+                SpyCategoryNodeTableMap::COL_FK_CATEGORY,
+                SpyCategoryNodeTableMap::COL_FK_PARENT_CATEGORY_NODE,
+            ])
+            ->find()
+            ->getData();
+
+        return $this->getFactory()
+            ->createCategoryMapper()
+            ->mapCategoryNodeRowsToNodeTransfersIndexedByIdCategoryNode($categoryNodeRows);
+    }
+
+    /**
+     * @module Category
+     *
+     * @param list<int> $categoryIds
+     *
+     * @return array<int, string>
+     */
+    public function getCategoryNamesIndexedByIdCategory(array $categoryIds, int $idLocale): array
+    {
+        if (!$categoryIds) {
+            return [];
+        }
+
+        $categoryNameRows = $this->getFactory()
+            ->createCategoryQuery()
+            ->filterByIdCategory_In($categoryIds)
+            ->useAttributeQuery()
+                ->filterByFkLocale($idLocale)
+            ->endUse()
+            ->select([SpyCategoryTableMap::COL_ID_CATEGORY, SpyCategoryAttributeTableMap::COL_NAME])
+            ->find()
+            ->getData();
+
+        return $this->getFactory()
+            ->createCategoryMapper()
+            ->mapCategoryNameRowsToCategoryNamesIndexedByIdCategory($categoryNameRows);
     }
 }

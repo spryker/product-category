@@ -12,6 +12,9 @@ use Generated\Shared\Transfer\CategoryLocalizedAttributesTransfer;
 use Generated\Shared\Transfer\CategoryTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\NodeTransfer;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryAttributeTableMap;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryNodeTableMap;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryTableMap;
 use Orm\Zed\Category\Persistence\SpyCategory;
 use Propel\Runtime\Collection\Collection;
 
@@ -121,5 +124,43 @@ class CategoryMapper
         }
 
         return $categoryTransfer;
+    }
+
+    /**
+     * @param array<array<string, mixed>> $categoryNodeRows
+     *
+     * @return array<int, \Generated\Shared\Transfer\NodeTransfer>
+     */
+    public function mapCategoryNodeRowsToNodeTransfersIndexedByIdCategoryNode(array $categoryNodeRows): array
+    {
+        $nodeTransfers = [];
+
+        foreach ($categoryNodeRows as $categoryNodeRow) {
+            $idCategoryNode = (int)$categoryNodeRow[SpyCategoryNodeTableMap::COL_ID_CATEGORY_NODE];
+            $idParentCategoryNode = $categoryNodeRow[SpyCategoryNodeTableMap::COL_FK_PARENT_CATEGORY_NODE];
+
+            $nodeTransfers[$idCategoryNode] = (new NodeTransfer())
+                ->setIdCategoryNode($idCategoryNode)
+                ->setFkCategory((int)$categoryNodeRow[SpyCategoryNodeTableMap::COL_FK_CATEGORY])
+                ->setFkParentCategoryNode($idParentCategoryNode === null ? null : (int)$idParentCategoryNode);
+        }
+
+        return $nodeTransfers;
+    }
+
+    /**
+     * @param array<array<string, mixed>> $categoryNameRows
+     *
+     * @return array<int, string>
+     */
+    public function mapCategoryNameRowsToCategoryNamesIndexedByIdCategory(array $categoryNameRows): array
+    {
+        $categoryNames = [];
+
+        foreach ($categoryNameRows as $categoryNameRow) {
+            $categoryNames[(int)$categoryNameRow[SpyCategoryTableMap::COL_ID_CATEGORY]] = (string)$categoryNameRow[SpyCategoryAttributeTableMap::COL_NAME];
+        }
+
+        return $categoryNames;
     }
 }

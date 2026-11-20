@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\ProductCategory;
 
+use Spryker\Service\Category\CategoryServiceInterface;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToCategoryBridge;
@@ -51,6 +52,10 @@ class ProductCategoryDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const SERVICE_UTIL_ENCODING = 'util encoding service';
 
+    public const string FACADE_STORE = 'FACADE_STORE';
+
+    public const string SERVICE_CATEGORY = 'SERVICE_CATEGORY';
+
     /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
@@ -69,6 +74,8 @@ class ProductCategoryDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addEventFacade($container);
 
         $container = $this->addCategoryFacade($container);
+        $container = $this->addStoreFacade($container);
+        $container = $this->addCategoryService($container);
 
         return $container;
     }
@@ -103,6 +110,29 @@ class ProductCategoryDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_CATEGORY, function (Container $container) {
             return new ProductCategoryToCategoryBridge($container->getLocator()->category()->facade());
+        });
+
+        return $container;
+    }
+
+    protected function addStoreFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_STORE, function (Container $container) {
+            return $container->getLocator()->store()->facade();
+        });
+
+        return $container;
+    }
+
+    protected function addCategoryService(Container $container): Container
+    {
+        $container->set(static::SERVICE_CATEGORY, function (Container $container): ?CategoryServiceInterface {
+            // The Category service ships with spryker/category 5.28.0; the module still supports older Category versions.
+            if (!interface_exists(CategoryServiceInterface::class)) {
+                return null;
+            }
+
+            return $container->getLocator()->category()->service();
         });
 
         return $container;

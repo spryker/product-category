@@ -10,6 +10,8 @@ namespace Spryker\Zed\ProductCategory\Persistence\Propel\Mapper;
 use Generated\Shared\Transfer\CategoryTransfer;
 use Generated\Shared\Transfer\ProductCategoryCollectionTransfer;
 use Generated\Shared\Transfer\ProductCategoryTransfer;
+use Orm\Zed\Category\Persistence\Map\SpyCategoryNodeTableMap;
+use Orm\Zed\ProductCategory\Persistence\Map\SpyProductCategoryTableMap;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;
 
@@ -78,5 +80,22 @@ class ProductCategoryMapper
         }
 
         return $productCategoryCollectionTransfer;
+    }
+
+    /**
+     * @param array<array<string, mixed>> $productCategoryNodeRows
+     *
+     * @return array<int, list<int>>
+     */
+    public function mapProductCategoryNodeRowsToCategoryNodeIdsIndexedByIdProductAbstract(array $productCategoryNodeRows): array
+    {
+        $categoryNodeIdsIndexedByIdProductAbstract = [];
+
+        foreach ($productCategoryNodeRows as $productCategoryNodeRow) {
+            $idProductAbstract = (int)$productCategoryNodeRow[SpyProductCategoryTableMap::COL_FK_PRODUCT_ABSTRACT];
+            $categoryNodeIdsIndexedByIdProductAbstract[$idProductAbstract][] = (int)$productCategoryNodeRow[SpyCategoryNodeTableMap::COL_ID_CATEGORY_NODE];
+        }
+
+        return $categoryNodeIdsIndexedByIdProductAbstract;
     }
 }

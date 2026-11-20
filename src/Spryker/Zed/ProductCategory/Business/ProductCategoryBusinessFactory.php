@@ -7,11 +7,14 @@
 
 namespace Spryker\Zed\ProductCategory\Business;
 
+use Spryker\Service\Category\CategoryServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractCreator;
 use Spryker\Zed\ProductCategory\Business\Creator\ProductCategoryProductAbstractCreatorInterface;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTrigger;
 use Spryker\Zed\ProductCategory\Business\Event\ProductCategoryEventTriggerInterface;
+use Spryker\Zed\ProductCategory\Business\Expander\ItemCategoryPathExpander;
+use Spryker\Zed\ProductCategory\Business\Expander\ItemCategoryPathExpanderInterface;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductAbstractCollectionExpander;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductAbstractCollectionExpanderInterface;
 use Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpander;
@@ -19,12 +22,15 @@ use Spryker\Zed\ProductCategory\Business\Expander\ProductConcreteExpanderInterfa
 use Spryker\Zed\ProductCategory\Business\Manager\ProductCategoryManager;
 use Spryker\Zed\ProductCategory\Business\Model\CategoryReader;
 use Spryker\Zed\ProductCategory\Business\Model\CategoryReaderInterface;
+use Spryker\Zed\ProductCategory\Business\Reader\CategoryPathNodeReader;
+use Spryker\Zed\ProductCategory\Business\Reader\CategoryPathNodeReaderInterface;
 use Spryker\Zed\ProductCategory\Business\Reader\ProductCategoryReader;
 use Spryker\Zed\ProductCategory\Business\Reader\ProductCategoryReaderInterface;
 use Spryker\Zed\ProductCategory\Business\Updater\ProductCategoryProductAbstractUpdater;
 use Spryker\Zed\ProductCategory\Business\Updater\ProductCategoryProductAbstractUpdaterInterface;
 use Spryker\Zed\ProductCategory\Dependency\Facade\ProductCategoryToLocaleInterface;
 use Spryker\Zed\ProductCategory\ProductCategoryDependencyProvider;
+use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
  * @method \Spryker\Zed\ProductCategory\Persistence\ProductCategoryRepositoryInterface getRepository()
@@ -126,8 +132,35 @@ class ProductCategoryBusinessFactory extends AbstractBusinessFactory
         );
     }
 
+    public function createItemCategoryPathExpander(): ItemCategoryPathExpanderInterface
+    {
+        return new ItemCategoryPathExpander(
+            $this->createCategoryPathNodeReader(),
+            $this->getCategoryService(),
+        );
+    }
+
+    public function createCategoryPathNodeReader(): CategoryPathNodeReaderInterface
+    {
+        return new CategoryPathNodeReader(
+            $this->getRepository(),
+            $this->getLocaleFacade(),
+            $this->getStoreFacade(),
+        );
+    }
+
     public function getLocaleFacade(): ProductCategoryToLocaleInterface
     {
         return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_LOCALE);
+    }
+
+    public function getStoreFacade(): StoreFacadeInterface
+    {
+        return $this->getProvidedDependency(ProductCategoryDependencyProvider::FACADE_STORE);
+    }
+
+    public function getCategoryService(): ?CategoryServiceInterface
+    {
+        return $this->getProvidedDependency(ProductCategoryDependencyProvider::SERVICE_CATEGORY);
     }
 }
