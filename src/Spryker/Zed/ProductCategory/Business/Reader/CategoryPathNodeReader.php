@@ -34,6 +34,10 @@ class CategoryPathNodeReader implements CategoryPathNodeReaderInterface
             return [];
         }
 
+        if (!$this->storeFacade->isCurrentStoreDefined()) {
+            return [];
+        }
+
         $categoryNodeIdsIndexedByIdProductAbstract = $this->productCategoryRepository->getCategoryNodeIdsIndexedByIdProductAbstract($productAbstractIds);
 
         if (!$categoryNodeIdsIndexedByIdProductAbstract) {
